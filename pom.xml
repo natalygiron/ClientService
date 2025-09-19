@@ -29,6 +29,7 @@
         <jacoco.version>0.8.11</jacoco.version>
         <checkstyle.version>10.17.0</checkstyle.version>
         <surefire.version>3.2.5</surefire.version>
+        <swagger.annotations.version>2.2.15</swagger.annotations.version>
     </properties>
 
     <!-- Dependencias del proyecto -->
@@ -99,6 +100,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.annotations.version}</version>
         </dependency>
     </dependencies>
 
