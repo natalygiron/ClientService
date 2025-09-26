@@ -185,7 +185,7 @@ public class ClientController {
     public ResponseEntity<ClientResponse> patch(@PathVariable Long id,
                                                 @Valid @RequestBody PatchClientRequest req) {
         log.info("Patching client with ID: {}", id);
-        Client updatedClient = clientService.updateClient(id, req.getFirstName(), req.getLastName(), req.getDni(), req.getEmail());
+        Client updatedClient = clientService.updateClientPartial(id, req);
         return ResponseEntity.ok(ClientResponse.from(updatedClient));
     }
 
