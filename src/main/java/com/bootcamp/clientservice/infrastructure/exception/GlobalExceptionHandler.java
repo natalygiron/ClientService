@@ -7,9 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import com.bootcamp.clientservice.domain.exception.ValidationException;
 
 @Slf4j
 @RestControllerAdvice
