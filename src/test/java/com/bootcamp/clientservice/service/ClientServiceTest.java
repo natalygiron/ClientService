@@ -1,5 +1,7 @@
 package com.bootcamp.clientservice.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +25,7 @@ import com.bootcamp.clientservice.domain.port.IClientRepository;
 import com.bootcamp.clientservice.dto.request.CreateClientRequest;
 import com.bootcamp.clientservice.domain.port.AccountsClient;
 import com.bootcamp.clientservice.application.validation.ClientValidator;
+import com.bootcamp.clientservice.dto.request.PatchClientRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ClientServiceTest {
@@ -170,6 +173,67 @@ class ClientServiceTest {
         verify(clientRepository).findById(99L);
         verifyNoMoreInteractions(clientRepository);
         verifyNoInteractions(accountsClient);
+    }
+
+    // -------------------- updateClientPartial() --------------------
+    @Test
+    void updateClientPartial_updatesOnlyProvidedFields() {
+        Client existing = new Client(1L, "Juan", "Perez", "juan@mail.com", "12345678");
+        PatchClientRequest req = new PatchClientRequest();
+        req.setFirstName("Carlos");
+
+        when(clientRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(clientRepository.save(any(Client.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Client result = service.updateClientPartial(1L, req);
+
+        assertThat(result.getFirstName()).isEqualTo("Carlos");
+        assertThat(result.getLastName()).isEqualTo("Perez"); // igual al original
+        assertThat(result.getEmail()).isEqualTo("juan@mail.com");
+        assertThat(result.getDni()).isEqualTo("12345678");
+
+        verify(clientValidator).validateUpdateClient(existing, "juan@mail.com", "12345678");
+    }
+
+    @Test
+    void updateClientPartial_throwsWhenClientNotFound() {
+        PatchClientRequest req = new PatchClientRequest();
+        when(clientRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.updateClientPartial(99L, req))
+                .isInstanceOf(ClientNotFoundException.class);
+    }
+
+    @Test
+    void updateClientPartial_throwsWhenValidatorFails() {
+        Client existing = new Client(1L, "Juan", "Perez", "juan@mail.com", "12345678");
+        PatchClientRequest req = new PatchClientRequest();
+        req.setEmail("otro@mail.com");
+
+        when(clientRepository.findById(1L)).thenReturn(Optional.of(existing));
+        doThrow(new DuplicateClientException("email", "otro@mail.com"))
+                .when(clientValidator).validateUpdateClient(existing, "otro@mail.com", "12345678");
+
+        assertThatThrownBy(() -> service.updateClientPartial(1L, req))
+                .isInstanceOf(DuplicateClientException.class);
+    }
+
+    @Test
+    void updateClientPartial_keepsOriginalValuesIfBlank() {
+        // given
+        Client existing = new Client(1L, "Juan", "Perez", "juan@mail.com", "12345678");
+        PatchClientRequest req = new PatchClientRequest();
+        req.setFirstName("  "); // en blanco → debería ignorarse
+
+        when(clientRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(clientRepository.save(any(Client.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // when
+        Client result = service.updateClientPartial(1L, req);
+
+        // then
+        assertThat(result.getFirstName()).isEqualTo("Juan"); // no cambia
+        assertThat(result.getLastName()).isEqualTo("Perez");
     }
 
     // -------------------- deleteClient() --------------------
