@@ -2,6 +2,7 @@ package com.bootcamp.clientservice.application.service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bootcamp.clientservice.domain.exception.ClientNotFoundException;
@@ -12,6 +13,7 @@ import com.bootcamp.clientservice.domain.port.IClientRepository;
 import com.bootcamp.clientservice.dto.request.CreateClientRequest;
 import com.bootcamp.clientservice.domain.port.AccountsClient;
 import com.bootcamp.clientservice.application.validation.ClientValidator;
+import com.bootcamp.clientservice.dto.request.PatchClientRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,6 +106,44 @@ public class ClientService {
 
         Client saved = clientRepository.save(updated);
         log.info("Client updated successfully. ID: {}", updated.getId());
+        return saved;
+    }
+
+    @Transactional
+    public Client updateClientPartial(Long id, PatchClientRequest req) {
+        log.info("Partially updating client with ID: {}", id);
+
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ClientNotFoundException(id));
+
+        String newFirstName = Optional.ofNullable(req.getFirstName())
+                .filter(s -> !s.isBlank()).map(String::trim)
+                .orElse(client.getFirstName());
+
+        String newLastName = Optional.ofNullable(req.getLastName())
+                .filter(s -> !s.isBlank()).map(String::trim)
+                .orElse(client.getLastName());
+
+        String newEmail = Optional.ofNullable(req.getEmail())
+                .filter(s -> !s.isBlank()).map(String::trim)
+                .orElse(client.getEmail());
+
+        String newDni = Optional.ofNullable(req.getDni())
+                .filter(s -> !s.isBlank()).map(String::trim)
+                .orElse(client.getDni());
+
+        clientValidator.validateUpdateClient(client, newEmail, newDni);
+        Client updated = new Client(
+                client.getId(),
+                newFirstName,
+                newLastName,
+                newEmail,
+                newDni
+        );
+
+        Client saved = clientRepository.save(updated);
+
+        log.info("Client partially updated successfully. ID: {}", saved.getId());
         return saved;
     }
 
