@@ -5,13 +5,13 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.bootcamp.clientservice.domain.Client;
+import com.bootcamp.clientservice.domain.model.Client;
 import com.bootcamp.clientservice.dto.request.CreateClientRequest;
 import com.bootcamp.clientservice.dto.request.PatchClientRequest;
 import com.bootcamp.clientservice.dto.request.UpdateClientRequest;
 import com.bootcamp.clientservice.dto.response.ClientResponse;
-import com.bootcamp.clientservice.exception.ErrorResponse;
-import com.bootcamp.clientservice.service.ClientService;
+import com.bootcamp.clientservice.infrastructure.exception.ErrorResponse;
+import com.bootcamp.clientservice.application.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -148,7 +148,7 @@ public class ClientController {
     public ResponseEntity<ClientResponse> update(@PathVariable Long id,
                                                  @Valid @RequestBody UpdateClientRequest req) {
         log.info("Updating client with ID: {}", id);
-        Client updatedClient = clientService.updateClient(id, req.getFirstName(), req.getLastName(), req.getEmail());
+        Client updatedClient = clientService.updateClient(id, req.getFirstName(), req.getLastName(), req.getEmail(), req.getDni());
         return ResponseEntity.ok(ClientResponse.from(updatedClient));
     }
 
@@ -163,7 +163,7 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Correo electrónico ya en uso",
+            @ApiResponse(responseCode = "409", description = "Conflicto (ej. email/dni duplicado)",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
@@ -185,7 +185,7 @@ public class ClientController {
     public ResponseEntity<ClientResponse> patch(@PathVariable Long id,
                                                 @Valid @RequestBody PatchClientRequest req) {
         log.info("Patching client with ID: {}", id);
-        Client updatedClient = clientService.updateClient(id, req.getFirstName(), req.getLastName(), req.getEmail());
+        Client updatedClient = clientService.updateClient(id, req.getFirstName(), req.getLastName(), req.getDni(), req.getEmail());
         return ResponseEntity.ok(ClientResponse.from(updatedClient));
     }
 
