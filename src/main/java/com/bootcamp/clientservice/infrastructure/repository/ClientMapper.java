@@ -10,8 +10,8 @@ public class ClientMapper {
                 .id(client.getId())
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
-                .dni(client.getDni())
                 .email(client.getEmail())
+                .dni(client.getDni())
                 .build();
     }
 
@@ -20,8 +20,8 @@ public class ClientMapper {
                 entity.getId(),
                 entity.getFirstName(),
                 entity.getLastName(),
-                entity.getDni(),
-                entity.getEmail()
+                entity.getEmail(),
+                entity.getDni()
         );
     }
 }
