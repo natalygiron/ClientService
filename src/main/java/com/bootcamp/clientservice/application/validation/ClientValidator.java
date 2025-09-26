@@ -1,14 +1,12 @@
 package com.bootcamp.clientservice.application.validation;
 
 import static com.bootcamp.clientservice.domain.exception.ValidationMessages.*;
-
 import org.springframework.stereotype.Component;
 import com.bootcamp.clientservice.domain.exception.DuplicateClientException;
 import com.bootcamp.clientservice.domain.exception.ValidationException;
 import com.bootcamp.clientservice.domain.model.Client;
 import com.bootcamp.clientservice.domain.port.IClientRepository;
 import lombok.RequiredArgsConstructor;
-
 import java.util.stream.Stream;
 
 @Component
