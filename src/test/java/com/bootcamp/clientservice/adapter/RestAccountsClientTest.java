@@ -21,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.bootcamp.clientservice.dto.external.AccountResponse;
+import com.bootcamp.clientservice.infrastructure.external.RestAccountsClient;
 
 @ExtendWith(MockitoExtension.class)
 class RestAccountsClientTest {
@@ -43,7 +44,7 @@ class RestAccountsClientTest {
     @Test
     void hasAccounts_returns_true_when_accounts_exist() {
 //        Long clientId = 1L;
-        String url = "http://localhost:8081/cuentas/" + clientId;
+        String url = "http://localhost:8081/cuentas/cliente/" + clientId;
 
         List<AccountResponse> accounts = List.of(new AccountResponse());
         ResponseEntity<List<AccountResponse>> response = new ResponseEntity<>(accounts, HttpStatus.OK);
@@ -59,7 +60,7 @@ class RestAccountsClientTest {
     @Test
     void hasAccounts_returns_false_when_no_accounts() {
 //        Long clientId = 2L;
-        String url = baseUrl + "/cuentas/" + clientId;
+        String url = baseUrl + "/cuentas/cliente/" + clientId;
 
         ResponseEntity<List<AccountResponse>> response = new ResponseEntity<>(List.of(), HttpStatus.OK);
 
@@ -74,7 +75,7 @@ class RestAccountsClientTest {
     @Test
     void hasAccounts_throws_exception_when_rest_client_fails() {
 //        Long clientId = 3L;
-        String url = baseUrl + "/cuentas/" + clientId;
+        String url = baseUrl + "/cuentas/cliente/" + clientId;
 
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), isNull(),
                 ArgumentMatchers.<ParameterizedTypeReference<List<AccountResponse>>>any()))
@@ -92,7 +93,7 @@ class RestAccountsClientTest {
 //        Long clientId = 1L;
         // Arrange
         Mockito.when(restTemplate.exchange(
-                eq(baseUrl + "/cuentas/" + clientId),
+                eq(baseUrl + "/cuentas/cliente/" + clientId),
                 eq(HttpMethod.GET),
                 isNull(),
                 any(ParameterizedTypeReference.class))
@@ -116,7 +117,7 @@ class RestAccountsClientTest {
         ResponseEntity<List<AccountResponse>> responseEntity = new ResponseEntity<>(accounts, HttpStatus.BAD_REQUEST);
 
         Mockito.when(restTemplate.exchange(
-                eq(baseUrl + "/cuentas/" + clientId),
+                eq(baseUrl + "/cuentas/cliente/" + clientId),
                 eq(HttpMethod.GET),
                 isNull(),
                 any(ParameterizedTypeReference.class))
