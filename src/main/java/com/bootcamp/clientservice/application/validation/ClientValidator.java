@@ -44,6 +44,18 @@ public class ClientValidator {
         }
     }
 
+    public void validateUpdateClient(Client currentClient, String newEmail, String newDni) {
+        if (!newEmail.equalsIgnoreCase(currentClient.getEmail()) &&
+                clientRepository.existsByEmail(newEmail)) {
+            throw new DuplicateClientException("email", newEmail);
+        }
+
+        if (!newDni.equalsIgnoreCase(currentClient.getDni()) &&
+                clientRepository.existsByDni(newDni)) {
+            throw new DuplicateClientException("dni", newDni);
+        }
+    }
+
     private boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
     }
