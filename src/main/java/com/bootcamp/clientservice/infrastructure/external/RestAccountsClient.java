@@ -1,4 +1,4 @@
-package com.bootcamp.clientservice.adapter;
+package com.bootcamp.clientservice.infrastructure.external;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ public class RestAccountsClient implements AccountsClient {
 
     @Override
     public boolean hasAccounts(Long clientId) {
-        String url = baseUrl + "/cuentas/" + clientId;
+        String url = baseUrl + "/cuentas/cliente/" + clientId;
 
         try {
             ResponseEntity<List<AccountResponse>> response = restTemplate.exchange(
