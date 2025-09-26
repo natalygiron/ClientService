@@ -1,6 +1,6 @@
 package com.bootcamp.clientservice.dto.response;
 
-import com.bootcamp.clientservice.domain.Client;
+import com.bootcamp.clientservice.domain.model.Client;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

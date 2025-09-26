@@ -22,9 +22,9 @@ public class UpdateClientRequest {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-//    @Pattern(regexp = "^[0-9]+$", message = "DNI must contain only digits")
-//    @NotBlank(message = "DNI is required")
-//    private String dni;
+    @Pattern(regexp = "^[0-9]+$", message = "DNI must contain only digits")
+    @NotBlank(message = "DNI is required")
+    private String dni;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
