@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import com.bootcamp.clientservice.domain.model.Client;
 
-public interface ClientRepositoryPort {
+public interface IClientRepository {
     Client save(Client client);
 
     Optional<Client> findById(Long id);
