@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.bootcamp.clientservice.dto.external.AccountResponse;
-import com.bootcamp.clientservice.port.AccountsClient;
+import com.bootcamp.clientservice.domain.port.AccountsClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

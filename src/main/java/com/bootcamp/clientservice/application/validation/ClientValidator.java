@@ -1,17 +1,17 @@
-package com.bootcamp.clientservice.validation;
+package com.bootcamp.clientservice.domain.validation;
 
-import static org.apache.logging.log4j.util.Strings.isBlank;
 import javax.validation.ValidationException;
-import org.springframework.stereotype.Component;
-import com.bootcamp.clientservice.domain.Client;
-import com.bootcamp.clientservice.repository.ClientRepository;
-import lombok.RequiredArgsConstructor;
+import com.bootcamp.clientservice.domain.exception.DuplicateClientException;
+import com.bootcamp.clientservice.domain.model.Client;
+import com.bootcamp.clientservice.domain.port.IClientRepository;
 
-@Component
-@RequiredArgsConstructor
 public class ClientValidator {
 
-    private final ClientRepository clientRepository;
+    private final IClientRepository clientRepository;
+
+    public ClientValidator(IClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     public void validateNewClient(Client client) {
         if (isBlank(client.getFirstName()) || isBlank(client.getLastName()) ||
@@ -20,11 +20,11 @@ public class ClientValidator {
         }
 
         if (clientRepository.existsByDni(client.getDni())) {
-            throw new IllegalArgumentException("El DNI ya está registrado");
+            throw new DuplicateClientException("DNI", client.getDni());
         }
 
         if (clientRepository.existsByEmail(client.getEmail())) {
-            throw new IllegalArgumentException("El correo ya está registrado");
+            throw new DuplicateClientException("email", client.getEmail());
         }
 
         if (!isValidEmail(client.getEmail())) {
@@ -35,6 +35,10 @@ public class ClientValidator {
             throw new ValidationException("El DNI debe tener entre 8 y 12 caracteres");
         }
 
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 
     private boolean isValidEmail(String email) {
