@@ -1,4 +1,4 @@
-package com.bootcamp.clientservice.exception;
+package com.bootcamp.clientservice.infrastructure.exception;
 
 import lombok.Builder;
 import lombok.Data;

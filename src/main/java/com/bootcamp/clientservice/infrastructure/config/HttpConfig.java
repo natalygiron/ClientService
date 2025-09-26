@@ -1,4 +1,4 @@
-package com.bootcamp.clientservice.config;
+package com.bootcamp.clientservice.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

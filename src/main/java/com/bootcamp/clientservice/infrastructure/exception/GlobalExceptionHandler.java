@@ -1,4 +1,4 @@
-package com.bootcamp.clientservice.exception;
+package com.bootcamp.clientservice.infrastructure.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
