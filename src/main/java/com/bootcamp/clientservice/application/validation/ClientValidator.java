@@ -1,24 +1,30 @@
-package com.bootcamp.clientservice.domain.validation;
+package com.bootcamp.clientservice.application.validation;
 
-import javax.validation.ValidationException;
+import static com.bootcamp.clientservice.domain.exception.ValidationMessages.*;
+
+import org.springframework.stereotype.Component;
 import com.bootcamp.clientservice.domain.exception.DuplicateClientException;
+import com.bootcamp.clientservice.domain.exception.ValidationException;
 import com.bootcamp.clientservice.domain.model.Client;
 import com.bootcamp.clientservice.domain.port.IClientRepository;
+import lombok.RequiredArgsConstructor;
 
+import java.util.stream.Stream;
+
+@Component
+@RequiredArgsConstructor
 public class ClientValidator {
 
     private final IClientRepository clientRepository;
 
-    public ClientValidator(IClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
-
     public void validateNewClient(Client client) {
-        if (isBlank(client.getFirstName()) || isBlank(client.getLastName()) ||
-                isBlank(client.getDni()) || isBlank(client.getEmail())) {
-            throw new ValidationException("Todos los campos son obligatorios");
+        // Validar campos obligatorios con Stream
+        if (Stream.of(client.getFirstName(), client.getLastName(), client.getDni(), client.getEmail())
+                .anyMatch(this::isBlank)) {
+            throw new ValidationException(FIELDS_REQUIRED);
         }
 
+        // Validar duplicados usando repositorio
         if (clientRepository.existsByDni(client.getDni())) {
             throw new DuplicateClientException("DNI", client.getDni());
         }
@@ -27,14 +33,15 @@ public class ClientValidator {
             throw new DuplicateClientException("email", client.getEmail());
         }
 
+        // Validar formato email
         if (!isValidEmail(client.getEmail())) {
-            throw new ValidationException("El correo electrónico tiene un formato inválido");
+            throw new ValidationException(EMAIL_INVALID);
         }
 
+        // Validar longitud de DNI
         if (client.getDni().length() < 8 || client.getDni().length() > 12) {
-            throw new ValidationException("El DNI debe tener entre 8 y 12 caracteres");
+            throw new ValidationException(DNI_INVALID);
         }
-
     }
 
     private boolean isBlank(String s) {
