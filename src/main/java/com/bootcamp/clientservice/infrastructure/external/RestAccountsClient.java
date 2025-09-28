@@ -25,7 +25,7 @@ public class RestAccountsClient implements AccountsClient {
 
     @Override
     public boolean hasAccounts(Long clientId) {
-        String url = baseUrl + "/cuentas/cliente/" + clientId;
+        String url = baseUrl + "/cuentas/clientes/" + clientId;
 
         try {
             ResponseEntity<List<AccountResponse>> response = restTemplate.exchange(
