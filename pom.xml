@@ -107,6 +107,13 @@
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger.annotations.version}</version>
         </dependency>
+
+        <!-- Reactor Test para pruebas reactivas -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- Configuración de plugins -->
